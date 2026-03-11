@@ -1,0 +1,28 @@
+{
+  "schema": "1.0",
+  "type": "whmcs-gateways",
+  "name": "relworxm",
+  "license": "proprietary",
+  "category": "payments",
+  "description": {
+    "name": "Relworx Mobile Money",
+    "tagline": "Relworx Mobile Money is most recognised and widely used payment gateway in UGANDA.",
+    "long": "Relworx Mobile Money is the fast, easy, secure way to accept credit cards online.",
+    "features": [
+      "Subscription management automation & one-click refunds"
+    ]
+  },
+  "logo": {
+    "filename": "logo.png"
+  },
+  "support": {
+    "homepage": "https:\/\/relworx.com\/",
+    "docs_url": "https:\/\/payments.relworx.com"
+  },
+  "authors": [
+    {
+      "name": "WHMCS",
+      "homepage": "https:\/\/www.whmcs.com\/"
+    }
+  ]
+}
