@@ -178,6 +178,7 @@ function relworxm_link($params)
     $postfields['invoice_id'] = $invoiceId;
     $postfields['msisdn'] = $customerNo;
     $postfields['ajax_url'] = $ajaxUrl;
+    $postfields['return_url'] = $returnUrl;
 
     $gatewayLogo = rtrim($systemUrl, '/') . '/modules/gateways/relworxm/logo.png';
     $safeDescription = htmlspecialchars($description, ENT_QUOTES, 'UTF-8');
@@ -233,6 +234,12 @@ function relworxm_link($params)
             align-items: center;
             gap: 14px;
             color: #f8fafc;
+        }
+
+        .relworx-paycard__brand-copy {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .relworx-paycard__logo {
@@ -494,7 +501,7 @@ function relworxm_link($params)
             <div class="relworx-paycard__top">
                 <div class="relworx-paycard__brand">
                     <img class="relworx-paycard__logo" src="' . $safeGatewayLogo . '" alt="Relworx logo" />
-                    <div>
+                    <div class="relworx-paycard__brand-copy">
                         <p class="relworx-paycard__eyebrow">' . $safeCompanyName . '</p>
                         <h3 class="relworx-paycard__title">Mobile Money Checkout</h3>
                     </div>
@@ -565,6 +572,7 @@ function relworxm_link($params)
         var InvoiceId = $("#invoice_id").val();
         var ContactNo = $("#msisdn").val();
         var AjaxUrl = decodeURIComponent($("#ajax_url").val());
+        var ReturnUrl = $("#return_url").val();
 
         payButton.prop("disabled", true).addClass("is-loading");
         relworxSetStatus("success", "Sending payment prompt to " + ContactNo + ". Please wait.");
@@ -580,6 +588,7 @@ function relworxm_link($params)
                 if(data["status"] == "success")
                 {
                     relworxSetStatus("success", data["message"]);
+                    relworxWatchPayment(AjaxUrl, InvoiceId, ReturnUrl);
                 }
                 else
                 {
@@ -593,6 +602,47 @@ function relworxm_link($params)
                 payButton.prop("disabled", false).removeClass("is-loading");
             }
         });
+    }
+
+    function relworxWatchPayment(ajaxUrl, invoiceId, returnUrl)
+    {
+        var attempts = 0;
+        var maxAttempts = 24;
+        var fallbackRedirectMs = 30000;
+
+        window.setTimeout(function() {
+            window.location.href = returnUrl;
+        }, fallbackRedirectMs);
+
+        var pollTimer = window.setInterval(function() {
+            attempts++;
+
+            $.ajax({
+                url: ajaxUrl,
+                type: "POST",
+                dataType: "json",
+                data: {
+                    Action: "status",
+                    InvoiceId: invoiceId
+                },
+                success: function(response) {
+                    if (response.status === "success") {
+                        window.clearInterval(pollTimer);
+                        relworxSetStatus("success", "Payment received. Redirecting back to your invoice...");
+                        window.location.href = returnUrl;
+                    } else if (attempts >= maxAttempts) {
+                        window.clearInterval(pollTimer);
+                        window.location.href = returnUrl;
+                    }
+                },
+                error: function() {
+                    if (attempts >= maxAttempts) {
+                        window.clearInterval(pollTimer);
+                        window.location.href = returnUrl;
+                    }
+                }
+            });
+        }, 5000);
     }
 
 </script>';

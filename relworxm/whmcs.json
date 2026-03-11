@@ -16,13 +16,14 @@
     "filename": "logo.png"
   },
   "support": {
-    "homepage": "https:\/\/relworx.com\/",
-    "docs_url": "https:\/\/payments.relworx.com"
+    "homepage": "https:\/\/www.caystard.group\/",
+    "docs_url": "https:\/\/github.com\/CaystardGrp\/Relworx-WHMCS"
   },
   "authors": [
     {
-      "name": "WHMCS",
-      "homepage": "https:\/\/www.whmcs.com\/"
+      "name": "Kayima Mark (Caystard Group Intl.)",
+      "homepage": "https:\/\/www.caystard.group\/",
+      "role": "developer"
     }
   ]
 }
