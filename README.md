@@ -2,6 +2,10 @@
 
 Relworx Mobile Money payment gateway module for WHMCS.
 
+## Preview
+
+![Relworx WHMCS checkout UI](assets/relworx-whmcs-checkout.png)
+
 ## Repository Layout
 
 This repository is intentionally published without the top-level `gateways/` folder.
